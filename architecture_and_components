@@ -1,3 +1,204 @@
 # Docker and its architecture.
 
-#Docker
+# What is a docker?
+Docker is a platform used for developing, shipping, and running applications inside containers. A container is a lightweight, portable, and self-sufficient unit that packages an application and all its dependencies, including libraries, configurations, and binaries, into one package. This ensures that the application runs consistently regardless of the environment it is deployed in (development, testing, production, etc.).
+
+# what is a container in a docker?
+In Docker, a container is a lightweight, standalone, and executable package that includes everything needed to run a piece of software. This includes the application code, runtime, libraries, dependencies, and system tools. Containers are isolated from each other and from the host system, ensuring that each container runs consistently regardless of where it's deployed.
+
+# Description about processs in a container.
+Namespace -id or name of the processes, cgroups allow to limit cpu, memory, and other resources. Generally 1 process per container but if needed - spin other process in the same container , these processes will be able to talk to each other as they able to talk to each other as they are in the same container (same name space, same c groops)
+ 
+Containers share the host system's operating system kernel, which makes them much more resource-efficient than virtual machines. They don't require a separate operating system, so they are faster to start up and use fewer resources. nature of operating system is to run processes. - ssh processes, user interface processes etc.
+ 
+Containers are ephemeral (they can be created, modified, and destroyed without affecting the host).
+Containers are isolated using Linux kernel features like namespaces and cgroups.
+
+# what is a image 
+An image is a lightweight, standalone, and executable package that contains everything needed to run a piece of software. This includes the application code, runtime, libraries, environment variables, and configuration files. An image is essentially a blueprint or template used to create containers.
+
+Docker images are immutable and read-only. Once an image is created, it cannot be modified directly. Any changes made to a running container (such as installing software or modifying files) are not reflected in the image. If you want to create a modified version of an image, you need to create a new image using a Dockerfile.
+
+Images are made up of layers, with each layer representing a set of changes or instructions. Layers are created from Dockerfile commands (such as RUN, COPY, ADD, etc.). Docker uses a copy-on-write mechanism, meaning layers are only stored once, and layers are shared between images, making them efficient in terms of storage.
+
+You can create Docker images using a Dockerfile, which is a text file that contains a series of instructions to build the image. These instructions define the base image to use, the application files to include, and the steps to install dependencies and configure the environment.
+
+Docker images are versioned using tags. The tag typically represents the version of the image (e.g., myapp:v1). If no tag is specified, Docker uses the latest tag by default.
+
+
+# Life cycle from creating a image to container.
+Dockerfile: To create an image, you usually start with a Dockerfile. The Dockerfile contains instructions to assemble the image (such as installing software, setting environment variables, or copying files).
+
+Build: The docker build command takes a Dockerfile and creates an image from it. During this process, Docker fetches any base images specified in the Dockerfile and executes each instruction to create layers.
+
+Repository: Docker images can be stored in repositories (like Docker Hub, Amazon ECR, or a private registry). These repositories allow images to be shared, downloaded, and managed.
+
+Running a Container: Once you have an image, you can create a container from that image by using the docker run command. This runs the image as a container, which can be executed as an isolated instance of your application.
+
+# example docker file.
+
+#Use an official Python runtime as a base image
+FROM python:3.9
+
+#Set the working directory inside the container
+WORKDIR /app
+
+#Copy the current directory contents into the container at /app
+COPY . /app
+
+#Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+#Make port 80 available for the app
+EXPOSE 80
+
+#Define the command to run the application
+CMD ["python", "app.py"]
+
+# container and virtual machine structure?
+
+container structure
+
+infrastructure
+host operating system
+docker
+container A (App A, Libs ), container B (App A, Libs ), container C (App A, Libs )
+
+Virtual Machines structure
+
+Infrastructure
+hypervisor
+VM A Guest OS (App A, Libs)
+VM B Guest OS (App A, Libs)
+VM C Guest OS (App A, Libs)
+
+
+
+# Docker architecture.
+
+Docker's architecture is based on a client-server model and follows a microservice-oriented approach. Below is an overview of the key components of Docker's architecture:
+1. Docker Client (CLI):
+
+    Role: The Docker client is the interface that users interact with to communicate with Docker's services.
+    How it works: You use commands like docker run, docker build, docker pull, etc., which are executed by the Docker client. The client communicates with the Docker daemon (server) to carry out the requested operations.
+    Examples of Client Interfaces: Command-line interface (CLI), graphical user interfaces (GUIs), or even REST APIs.
+
+2. Docker Daemon (Server):
+
+    Role: The Docker daemon (dockerd) is the core service that manages Docker containers.
+    How it works: It is responsible for:
+        Building, running, and managing Docker containers.
+        Communicating with other daemons to manage containers in a distributed environment (like Docker Swarm or Kubernetes).
+        Pulling images from a registry.
+        Storing and managing container images.
+    The Docker daemon listens for Docker API requests and can communicate with other Docker daemons.
+
+3. Docker Images:
+
+    Role: Docker images are the blueprints or templates used to create containers.
+    How it works: An image contains the application code, runtime, libraries, environment variables, and configuration files needed to run the application. Docker images are built using Dockerfiles, which contain instructions on how to assemble an image.
+    Examples: ubuntu, nginx, node are popular base images available on Docker Hub.
+
+4. Docker Containers:
+
+    Role: A Docker container is a running instance of a Docker image. It encapsulates an application along with its environment.
+    How it works: Containers are isolated from the host and from each other. They run in user space on top of the host operating system and share the same OS kernel. Containers are lightweight, portable, and can be started or stopped quickly.
+    Key aspects:
+        Containers are ephemeral (they can be created, modified, and destroyed without affecting the host).
+        Containers are isolated using Linux kernel features like namespaces and cgroups.
+		container is a run time of  a image
+
+5. Docker Registry:
+
+    Role: A Docker registry is a storage and distribution system for Docker images.
+    How it works: Registries store Docker images and allow users to pull images from remote locations. Docker Hub is the default public registry, but users can also set up their own private registries.
+    Examples: Docker Hub, Google Container Registry (GCR), Amazon Elastic Container Registry (ECR).
+
+6. Docker Engine:
+
+    Role: The Docker engine is the core part of Docker that runs on the host machine.
+    How it works: It consists of both the Docker daemon (dockerd) and the Docker CLI. The engine is responsible for managing containers, images, networks, and volumes on the host.
+
+7. Docker Volumes:
+
+    Role: Volumes provide persistent storage to containers. Unlike the container's filesystem, volumes are stored on the host system, allowing data to persist beyond the life of the container.
+    How it works: Containers can be attached to volumes for storing application data, databases, or logs.
+
+8. Docker Network:
+
+    Role: Docker containers need to communicate with each other and the outside world. Docker provides several networking options for containers to talk to each other securely.
+    How it works: Docker creates different network drivers for communication:
+        Bridge network (default for containers): Provides networking between containers on the same host.
+        Host network: The container shares the host's network.
+        Overlay network: Used for multi-host communication (usually in Docker Swarm or Kubernetes).
+
+9. Docker Compose (Optional):
+
+    Role: Docker Compose allows you to define and run multi-container Docker applications.
+    How it works: It uses a configuration file (typically docker-compose.yml) to define services, networks, and volumes for your application. You can start all the services with a single command, docker-compose up.
+
+Architecture Flow (Step-by-Step):
+
+    Docker Client issues commands to the Docker Daemon.
+    Docker Daemon manages the containers based on the commands. It pulls images from the Docker Registry (if needed), creates containers, and assigns them resources (volumes, networks).
+    Containers run isolated applications and communicate with each other via Docker's network layers.
+    If the container is stopped or removed, the images and data might remain in the registry and volumes for later use.
+
+Visualizing Docker Architecture:
+
+  +---------------------+        +-------------------+
+  |  Docker CLI (Client) | <----> |   Docker Daemon   |
+  +---------------------+        +-------------------+
+                                      |            ^
+                                      |            |
+                                      v            |
+                                +-------------+    |
+                                | Docker      |    |
+                                | Containers  | <----+
+                                +-------------+    |
+                                                   |
+                            +---------------------+ |
+                            |  Docker Registry    <---+
+                            +---------------------+    
+
+Conclusion:
+
+The architecture of Docker is designed for scalability, portability, and performance, with its key components (client, daemon, containers, and registries) working in harmony to deploy and manage applications efficiently. The lightweight nature of containers enables quick deployment, and their isolation ensures consistency across environments.
+
+
+if you install docker in any machine that becomes docker host, (because that is hosting a docker service), docker host is the house of all of tje containers thst you create,
+client (Docker CLI) Rest API  Server (docker daemon)
+
+
+# what is a daemon?
+
+A daemon is a background process or service that runs continuously on a computer system, typically without direct interaction from users. It is often designed to perform specific tasks or monitor certain conditions, and it remains active in the background, waiting for events or commands to process.
+Key Characteristics of a Daemon:
+
+    Background Operation: Daemons are not associated with a user interface. They run in the background and do not require direct user input to function.
+
+    Continuous Running: They typically run continuously or for a long duration, until they are explicitly stopped. They don't exit when their task is complete but instead wait for the next task.
+
+    System-Level Processes: Daemons often interact with system resources, such as file systems, network services, hardware, or user sessions, and are integral to the operation of the system.
+
+    Self-Starting: Many daemons are configured to start automatically when the system boots up.
+
+Examples of Daemons:
+
+    Web server daemon: A process like httpd or nginx, which handles incoming web requests and serves web pages.
+    Database daemon: A database service such as mysqld (MySQL Daemon), which manages database queries and operations.
+    System Monitoring Daemons: Daemons like cron (for scheduled tasks) or syslogd (for logging system messages).
+
+In Unix-like operating systems, daemons usually follow a naming convention of appending a d to the name of the service or process (e.g., sshd for SSH Daemon, httpd for HTTP Daemon).
+Daemon in Docker Context:
+
+In Docker, the Docker Daemon (dockerd) is the background service that manages containers, images, networks, and volumes. It interacts with the Docker client and orchestrates container creation, management, and execution.
+How Daemons Work:
+
+    A daemon waits for specific requests or events, processes them, and then waits for the next one. For example, a web server daemon listens on a specified port (e.g., port 80 for HTTP requests). When a request arrives, the daemon processes the request and sends back a response, then returns to waiting for more requests.
+
+In short, a daemon is a system service that runs in the background, autonomously performing tasks without user intervention, often critical to system operations.
+
+
+
+
