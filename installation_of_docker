@@ -1,0 +1,81 @@
+
+# installation of docker.
+
+To install Docker on Ubuntu, follow these steps:
+1. Update Your System
+
+Before starting the Docker installation, it's a good idea to update your system to ensure all your existing packages are up-to-date:
+
+sudo apt update
+sudo apt upgrade -y
+
+2. Install Required Dependencies
+
+Docker installation requires a few dependencies, which you can install with the following command:
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+
+3. Add Docker’s Official GPG Key
+
+Next, add Docker's official GPG key to ensure the packages you install are from a trusted source:
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+4. Add Docker Repository
+
+Now, add Docker’s official repository to your system:
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+5. Update Package Database
+
+Once the Docker repository is added, update your package index:
+
+sudo apt update
+
+6. Install Docker Engine
+
+Now, install Docker:
+
+sudo apt install docker-ce -y
+
+This will install the latest version of Docker.
+7. Verify Docker Installation
+
+# To confirm Docker is installed and running correctly, check its status:
+
+sudo systemctl status docker
+
+You should see an output indicating that Docker is active (running).
+8. Run Docker as a Non-root User (Optional)
+
+# By default, Docker requires sudo to run. To allow a user (e.g., ubuntu) to run Docker commands without sudo, add the user to the Docker group:
+
+sudo usermod -aG docker $USER
+
+Then, log out and log back in, or run the following command to apply the group membership immediately:
+
+newgrp docker
+
+9. Test Docker Installation
+
+To verify that Docker is working properly, you can run the "Hello World" container:
+
+docker run hello-world
+
+10. (Optional) Install Docker Compose
+
+If you need Docker Compose (a tool for defining and running multi-container Docker applications), you can install it by running:
+
+sudo apt install docker-compose -y
+
+Alternatively, for the latest version of Docker Compose, you can install it using the following commands:
+
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)
+sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+Conclusion:
+
+After completing these steps, Docker should be fully installed and ready to use on your Ubuntu system. You can now start using Docker to manage containers on your system. Let me know if you run into any issues!
+
