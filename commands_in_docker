@@ -1,0 +1,196 @@
+Docker provides a wide range of commands for managing containers, images, networks, and volumes. Below is a summary of the most commonly used Docker commands and their functions.
+Basic Docker Commands:
+1. docker --version
+
+    Description: Displays the installed version of Docker.
+
+docker --version
+
+2. docker info
+
+    Description: Displays detailed information about the Docker installation, including system resources and the status of the Docker daemon.
+
+docker info
+
+Working with Docker Containers:
+3. docker run
+
+    Description: Creates and starts a container from a specified image.
+    Example: Run a container with the nginx image.
+
+docker run -d -p 80:80 nginx
+
+    Options:
+        -d: Runs the container in detached mode (in the background).
+        -p: Maps port 80 on the host to port 80 in the container.
+
+4. docker ps
+
+    Description: Lists running containers.
+
+docker ps
+
+5. docker ps -a
+
+    Description: Lists all containers (including stopped containers).
+
+docker ps -a
+
+6. docker stop
+
+    Description: Stops a running container.
+
+docker stop <container_id or container_name>
+
+7. docker start
+
+    Description: Starts a stopped container.
+
+docker start <container_id or container_name>
+
+8. docker restart
+
+    Description: Restarts a running or stopped container.
+
+docker restart <container_id or container_name>
+
+9. docker exec
+
+    Description: Executes a command inside a running container (useful for interacting with a container’s shell).
+    Example: Run an interactive shell inside a container.
+
+docker exec -it <container_id or container_name> bash
+
+    -it makes it interactive and connects to the terminal.
+
+10. docker rm
+
+    Description: Removes a stopped container.
+
+docker rm <container_id or container_name>
+
+11. docker logs
+
+    Description: Fetches logs from a running or stopped container.
+
+docker logs <container_id or container_name>
+
+Working with Docker Images:
+12. docker pull
+
+    Description: Downloads an image from Docker Hub (or another registry).
+
+docker pull <image_name>
+
+Example:
+
+docker pull ubuntu
+
+13. docker build
+
+    Description: Builds an image from a Dockerfile.
+
+docker build -t <image_name> <path_to_dockerfile>
+
+Example:
+
+docker build -t myapp .
+
+14. docker images
+
+    Description: Lists all locally available images.
+
+docker images
+
+15. docker rmi
+
+    Description: Removes a Docker image.
+
+docker rmi <image_id or image_name>
+
+16. docker tag
+
+    Description: Tags an image to mark it with a new name (used to version images).
+
+docker tag <image_id> <new_image_name>:<tag>
+
+17. docker push
+
+    Description: Uploads a Docker image to a registry (e.g., Docker Hub).
+
+docker push <image_name>
+
+Working with Docker Volumes:
+18. docker volume create
+
+    Description: Creates a Docker volume.
+
+docker volume create <volume_name>
+
+19. docker volume ls
+
+    Description: Lists all Docker volumes.
+
+docker volume ls
+
+20. docker volume rm
+
+    Description: Removes a Docker volume.
+
+docker volume rm <volume_name>
+
+Working with Docker Networks:
+21. docker network create
+
+    Description: Creates a custom Docker network.
+
+docker network create <network_name>
+
+22. docker network ls
+
+    Description: Lists all Docker networks.
+
+docker network ls
+
+23. docker network rm
+
+    Description: Removes a Docker network.
+
+docker network rm <network_name>
+
+Docker System Commands:
+24. docker system prune
+
+    Description: Removes unused data such as stopped containers, unused networks, dangling images, and build cache.
+
+docker system prune
+
+You can add -a to remove all unused images, not just dangling ones:
+
+docker system prune -a
+
+25. docker info
+
+    Description: Displays detailed information about the Docker daemon and system resources.
+
+docker info
+
+26. docker version
+
+    Description: Displays version information about Docker client and server.
+
+docker version
+
+Additional Useful Commands:
+27. docker inspect
+
+    Description: Retrieves detailed information about a container or image.
+
+docker inspect <container_id or image_name>
+
+28. docker-compose (for Docker Compose)
+
+    Description: Manage multi-container Docker applications using docker-compose. For example:
+
+docker-compose up
+docker-compose down
