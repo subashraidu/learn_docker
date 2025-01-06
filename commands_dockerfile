@@ -1,0 +1,103 @@
+Basic Dockerfile Commands
+
+FROM
+Sets the base image for the Docker image. This is the first line in most Dockerfiles.
+
+FROM ubuntu:20.04
+
+LABEL
+Adds metadata to the image in the form of key-value pairs.
+
+LABEL maintainer="youremail@example.com"
+
+RUN
+Executes commands in the container (such as installing software).
+
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+COPY
+Copies files from the host system to the container.
+
+COPY . /app
+
+ADD
+Similar to COPY but also has the ability to fetch files from a URL or extract tar archives.
+
+ADD myfile.tar.gz /app
+
+WORKDIR
+Sets the working directory for subsequent commands.
+
+WORKDIR /app
+
+CMD
+Specifies the default command to run when the container starts. This command is executed as the last instruction in the Dockerfile.
+
+CMD ["python3", "app.py"]
+
+ENTRYPOINT
+Configures the container to run as an executable, overriding any default CMD instructions.
+
+ENTRYPOINT ["python3", "app.py"]
+
+EXPOSE
+Informs Docker that the container will listen on a specific network port.
+
+EXPOSE 5000
+
+ENV
+Sets environment variables inside the container.
+
+ENV APP_ENV=production
+
+VOLUME
+Creates a mount point with a specified path that can be used by the container to persist data.
+
+VOLUME ["/data"]
+
+USER
+Specifies the user to run the container as.
+
+USER nobody
+
+ARG
+Defines a build-time variable that can be passed during the build process.
+
+ARG app_version=1.0
+
+STOPSIGNAL
+Specifies the system call signal to be used to stop the container.
+
+    STOPSIGNAL SIGTERM
+
+Example Dockerfile
+
+# Use an official Python runtime as a base image
+FROM python:3.9-slim
+
+# Set environment variables
+ENV APP_ENV=production
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Define the command to run the application
+CMD ["python", "app.py"]
+
+
+
+    FROM: Start with a Python image as the base.
+    WORKDIR: Set the working directory inside the container to /app.
+    COPY: Copy everything from the current directory on the host into /app inside the container.
+    RUN: Install dependencies using pip.
+    EXPOSE: Expose port 5000 for the application.
+    CMD: Set the default command to run app.py when the container starts.
