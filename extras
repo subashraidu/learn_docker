@@ -1,0 +1,19 @@
+httpd
+
+httpd stands for HyperText Transfer Protocol Daemon. It is the name of the program, or process, that implements the HTTP (HyperText Transfer Protocol) and is commonly used in web servers to handle requests from clients (like web browsers). When you access a website, the browser sends an HTTP request to the web server. The httpd daemon processes this request and returns the appropriate web content, such as HTML, images, or other resources.
+
+In most cases, httpd refers to the Apache HTTP Server, which is one of the most widely used web server software programs. However, other web servers, like Nginx or LiteSpeed, also implement the HTTP protocol and have similar functionalities, but the term httpd is most closely associated with Apache.
+
+Here’s a brief breakdown:
+
+    Daemon: A background process that continuously runs to handle requests and provide services.
+    HTTP: The protocol used for transferring web pages and other resources over the internet.
+    Apache HTTP Server: A popular open-source web server software, often referred to by the name httpd when referring to its daemon.
+
+You can manage the httpd service in Linux using commands like:
+
+    systemctl start httpd (to start the service)
+    systemctl stop httpd (to stop the service)
+    systemctl restart httpd (to restart the service)
+
+In addition to serving web pages, httpd is responsible for handling other important tasks such as security configurations, load balancing, logging, and URL rewriting.
