@@ -1,0 +1,57 @@
+
+Here are some of the most commonly used commands in Docker Compose, categorized for better understanding:
+
+Basic Lifecycle Management:
+
+    docker-compose up: Creates and starts all the services defined in your docker-compose.yml file.
+        docker-compose up -d: Starts the services in detached mode (in the background).
+        docker-compose up --build: Builds (or rebuilds) images before starting the containers.
+        docker-compose up <service_name>: Starts only the specified service(s) and their dependencies.
+    docker-compose down: Stops and removes the containers, networks, volumes, and images created by up.
+        docker-compose down --volumes or -v: Also removes the named volumes declared in the volumes section.
+        docker-compose down --rmi <type>: Removes images used by the services (local: images without a custom tag; all: all images).
+        docker-compose down --remove-orphans: Removes containers for services not defined in the Compose file.
+        docker-compose down --timeout <seconds> or -t <seconds>: Specifies a timeout for stopping containers.
+    docker-compose start: Starts existing containers that were previously stopped.
+    docker-compose stop: Stops running containers without removing them.
+    docker-compose restart: Stops and then starts the containers.
+        docker-compose restart <service_name>: Restarts only the specified service(s).
+
+Image and Container Operations:
+
+    docker-compose build: Builds or rebuilds the images defined in your docker-compose.yml. This is useful when you make changes to your Dockerfile or build context.
+        docker-compose build --no-cache: Forces a rebuild of the image without using the cache.
+        docker-compose build <service_name>: Builds only the image for the specified service.
+    docker-compose pull: Downloads the images defined in your docker-compose.yml from the registry.
+    docker-compose push: Pushes the images of the services defined in your docker-compose.yml to a Docker registry.
+    docker-compose create: Creates the containers for the services but does not start them.
+    docker-compose rm: Removes stopped service containers.
+        docker-compose rm -f: Forces the removal without prompting.
+        docker-compose rm -v: Also removes any volumes associated with the containers.
+        docker-compose rm <service_name>: Removes only the containers for the specified service(s).
+    docker-compose run <service_name> [command] [args...]: Runs a one-off command on a service. This creates a new, temporary container for the command.
+        docker-compose run --rm <service_name> <command>: Runs the command and removes the container afterward.
+        docker-compose run -d <service_name> <command>: Runs the command in detached mode.
+
+Information and Monitoring:
+
+    docker-compose ps: Lists the status of the containers in your project. Shows the container name, image, command, service, created time, status, and ports.
+        docker-compose ps -a or --all: Shows all containers, including stopped ones.
+        docker-compose ps --services: Displays only the service names.
+    docker-compose logs: Views the output logs of your services.
+        docker-compose logs -f or --follow: Follows the log output in real-time.
+        docker-compose logs <service_name>: Shows the logs for a specific service.
+    docker-compose top: Displays the running processes inside the containers.
+    docker-compose events: Receives real-time events from containers.
+    docker-compose images: Lists the images used by the created containers.
+    docker-compose port <service_name> <private_port>: Prints the public port for a specific container's private port.
+    docker-compose config: Validates and displays your Compose file configuration.
+        docker-compose config --services: Prints the service names.
+        docker-compose config --volumes: Prints the volume names.
+        docker-compose config --networks: Prints the network names.
+    docker-compose version: Shows the Docker Compose version information.
+    docker-compose ls: Lists running Compose projects.
+
+Scaling:
+
+    docker-compose scale <service_name>=<number>: Sets the number of instances for a service.
