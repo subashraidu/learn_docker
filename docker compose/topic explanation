@@ -1,0 +1,138 @@
+Docker Compose: Managing Multi-Container Docker Applications
+
+    Definition: A tool for defining and running multi-container Docker applications using a single YAML file (docker-compose.yml).
+    Core Concept: Instead of individual docker run commands, Compose manages the setup and orchestration of multiple related containers.
+
+How Docker Compose Works:
+
+    docker-compose.yml: The central configuration file where you define:
+        services: The individual containers (web server, database, etc.).
+        image: The Docker image to use for each service.
+        container_name: A specific name for each container.
+        ports: Port mappings between the host and the container.
+        networks: Network configurations for inter-container communication.
+        volumes: Persistent storage configurations (bind mounts or named volumes).
+        environment: Environment variables for the containers.
+        env_file: Specifies a file containing environment variables.
+        build: Instructions to build a Docker image (either from a Dockerfile in a context or a specific dockerfile).
+        command: Overrides the default command of the image.
+    docker-compose up: Command to create and start all the services defined in the docker-compose.yml file.
+    docker-compose down: Command to stop and remove the containers, networks, and volumes created by docker-compose up.
+    docker-compose -f <filename> <command>: Specifies a different Docker Compose file to use.
+
+Why Docker Compose is Useful:
+
+    Configuration as Code: All application dependencies and configurations are in a single, readable YAML file.
+    Simplified Development Environment: Easy to set up and share consistent development environments.
+    Ideal for Various Stages: Useful for local development, testing, and CI/CD pipelines.
+    Environment Variable Management: Integrates well with .env files for managing configuration.
+
+Installation (Standalone on Linux):
+
+    Download:
+    Bash
+
+curl -SL https://github.com/docker/compose/releases/download/v2.35.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
+Permissions:
+Bash
+
+chmod +x /usr/local/bin/docker-compose
+
+Verification:
+Bash
+
+    docker compose version
+
+Basic Structure of docker-compose.yml (Example):
+YAML
+
+version: '3'
+services:
+  web:
+    container_name: nginx_compose
+    ports:
+      - "9090:80"
+    image: nginx:latest
+    networks:
+      - test_net
+
+  db:
+    container_name: postgres_compose
+    ports:
+      - "5432:5432"
+    image: postgres:13
+    environment:
+      - POSTGRES_USER: myuser
+      - POSTGRES_PASSWORD: mypass
+    volumes:
+      - "/opt/postgress:/var/lib/postgres" # Bind mount
+    networks:
+      - test_net
+networks:
+  test_net:
+
+Volumes:
+
+    Bind Mounts (/host/path:/container/path):
+        Maps a directory on the host machine directly to a directory in the container.
+        Changes in the container reflect on the host and vice versa.
+        Use Cases: Local development with live changes, full control over storage location.
+        Risks: Potential for errors if the host path doesn't exist, host filesystem permissions can interfere.
+    Named Volumes (volume_name:/container/path, volumes: volume_name:):
+        Docker creates and manages the volume within its internal storage (/var/lib/docker/volumes/...).
+        Abstracts away host paths.
+        Use Cases: Persistent data storage where the specific host location is not critical (databases).
+        Advantages: Safer and easier to manage for many scenarios.
+    Listing Volumes: docker volume ls
+
+Networks:
+
+    User-Defined Bridge Networks: Explicitly created networks (e.g., test_net).
+    Attaching Services: Services are attached to networks using the networks key under each service.
+    Benefits:
+        Service-to-Service Communication by Name: Containers on the same network can communicate using their service names as hostnames (e.g., web can access db at host: db, port: 5432).
+        Isolation: Containers on a specific network are isolated from other networks unless explicitly connected.
+        Control: Allows for configuration of network drivers and connecting external containers.
+    Automatic Network Creation: Docker Compose creates a default network if none is explicitly defined.
+    Testing Network Connectivity: Use docker exec -it <container_name> ping <another_service_name> to check if containers on the same network can reach each other.
+
+Building Docker Images with Docker Compose:
+
+    build: .: Builds an image using the Dockerfile in the current directory (.). The resulting image is tagged with the service name.
+    Build docker images using docker compose:
+
+version: '3'	
+services: 
+  web: 
+    image: my_image
+	container_name: test_container
+	build: .
+	
+version: '3'	
+services: 
+  web: 
+    image: my_image
+	container_name: test_container
+	build: 
+	  context: .
+    dockerfile: dockerfile2
+
+Overriding Image CMD:
+
+    command: <your_command>: In the docker-compose.yml file under a service, this overrides the default command defined in the Docker image's Dockerfile.
+    Example:
+    YAML
+
+version: '3'
+services:
+  web:
+    image: centos
+    container_name: centos
+    command: python -m SimpleHTTPServer
+
+Use Cases:
+
+    Customizing container behavior without modifying the image.
+    Avoiding image rebuilds for simple command changes.
+    Making containers more useful for specific tasks at runtime (testing, one-off jobs).
